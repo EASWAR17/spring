@@ -5,7 +5,7 @@ trigger:
 
 # Use the 'ubuntu-latest' image for the agent
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'mylocalpool'
 
 # Steps to clone the repository, build, test, and deploy
 steps:
