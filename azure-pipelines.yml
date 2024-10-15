@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: 'Default'   # Use your local agent pool name
+  name: 'test-pool'   # Use your local agent pool name
 steps:
 # Step 1: Build with Maven
 - task: Maven@3
