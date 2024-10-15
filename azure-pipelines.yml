@@ -9,9 +9,9 @@ steps:
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'   # Set memory allocation for Maven build
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.17'    # Set JDK version (adjust if needed)
-    jdkArchitectureOption: 'x64'
+    # javaHomeOption: 'JDKVersion'
+    # jdkVersionOption: '1.17'    # Set JDK version (adjust if needed)
+    # jdkArchitectureOption: 'x64'
     publishJUnitResults: true   # Publish JUnit test results
     testResultsFiles: '**/surefire-reports/TEST-*.xml'  # Location of test results
     goals: 'package'            # Use 'package' to build your project
