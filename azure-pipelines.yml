@@ -1,48 +1,32 @@
-# trigger:
-#   branches:
-#     include:
-#       - master  # Replace with your default branch if needed
-
-# # Use the 'ubuntu-latest' image for the agent
-# pool:
-#   name: 'mylocalpool'
-
-# # Steps to clone the repository, build, test, and deploy
-# steps:
-#   # Step 1: Checkout the code from GitHub
-#   - checkout: self
-#     persistCredentials: true  # Ensures credentials are persisted to clone private repos
-
-#   # Step 2: Build the Java project using Maven
-#   - task: Maven@3
-#     inputs:
-#       mavenPomFile: 'pom.xml'  # Assuming your pom.xml is in the root of the repository
-#       mavenOptions: '-Xmx3072m'  # Memory allocation for Maven
-#       javaHomeOption: 'JDKVersion'
-#       jdkVersionOption: '1.11'  # Java 11 (change if you're using a different version)
-#       jdkArchitectureOption: 'x64'
-#       publishJUnitResults: true  # Publish JUnit test results
-#       testResultsFiles: '**/target/surefire-reports/*.xml'
-#       goals: 'clean package'
-
+# azure-pipelines.yml
 trigger:
-- main
+  branches:
+    include:
+      - master # Specify the branch to trigger the build
 
 pool:
-  name: mylocalpool  # Or your own agent pool
+  name: 'mylocalpool' # Your custom Azure VM agent pool
 
 steps:
-  # Step 1: Checkout code from GitHub repository
-  - checkout: self
+# 1. Checkout the code using the Git command (as 'Checkout@2' is not available)
+- script: |
+    git clone https://github.com/EASWAR17/spring.git
+    cd YOUR_REPO
+  displayName: 'Checkout code from GitHub'
 
-  # Step 2: Build the Java project using Maven
-  - task: Maven@3
-    inputs:
-      mavenPomFile: 'pom.xml'  # Path to your pom.xml (adjust this if it's in a subdirectory)
-      mavenOptions: '-Xmx3072m'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.11'
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: true
-      testResultsFiles: '**/target/surefire-reports/*.xml'
-      goals: 'clean package'
+# 2. Set up JDK manually (since 'UseJava' is not available, assume JDK is pre-installed)
+# If JDK isn't installed on your VM, you need to manually install it using:
+# sudo apt install openjdk-11-jdk -y
+
+# 3. Run Maven build (assuming Maven is pre-installed on your VM)
+- script: |
+    mvn -version
+    mvn clean package
+  displayName: 'Build with Maven'
+
+# 4. Publish the JAR artifact to the pipeline's artifact store (optional)
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.SourcesDirectory)/target/*.jar'  # Adjust to your actual target directory
+    artifactName: 'drop'
+    publishLocation: 'Container'
