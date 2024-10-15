@@ -5,28 +5,16 @@ trigger:
       - master # Specify the branch to trigger the build
 
 pool:
-  vmImage: 'ubuntu-latest' # Your custom Azure VM agent pool
-
+  name: Default   # Use your local agent pool name
 steps:
-# 1. Checkout the code using the Git command (as 'Checkout@2' is not available)
-- script: |
-    git clone https://github.com/EASWAR17/spring.git
-    cd YOUR_REPO
-  displayName: 'Checkout code from GitHub'
-
-# 2. Set up JDK manually (since 'UseJava' is not available, assume JDK is pre-installed)
-# If JDK isn't installed on your VM, you need to manually install it using:
-# sudo apt install openjdk-11-jdk -y
-
-# 3. Run Maven build (assuming Maven is pre-installed on your VM)
-- script: |
-    mvn -version
-    mvn clean package
-  displayName: 'Build with Maven'
-
-# 4. Publish the JAR artifact to the pipeline's artifact store (optional)
-- task: PublishBuildArtifacts@1
+# Step 1: Build with Maven
+- task: Maven@3
   inputs:
-    pathToPublish: '$(Build.SourcesDirectory)/target/*.jar'  # Adjust to your actual target directory
-    artifactName: 'drop'
-    publishLocation: 'Container'
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'   # Set memory allocation for Maven build
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.17'    # Set JDK version (adjust if needed)
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true   # Publish JUnit test results
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'  # Location of test results
+    goals: 'package'            # Use 'package' to build your project
