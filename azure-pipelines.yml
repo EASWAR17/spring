@@ -1,8 +1,5 @@
-# azure-pipelines.yml
 trigger:
-  branches:
-    include:
-      - master # Specify the branch to trigger the build
+- main
 
 pool:
   name: 'Default'   # Use your local agent pool name
