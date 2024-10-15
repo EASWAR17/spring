@@ -5,7 +5,7 @@ trigger:
       - master # Specify the branch to trigger the build
 
 pool:
-  name: 'default' # Your custom Azure VM agent pool
+  name: 'Azure Pipelines' # Your custom Azure VM agent pool
 
 steps:
 # 1. Checkout the code using the Git command (as 'Checkout@2' is not available)
