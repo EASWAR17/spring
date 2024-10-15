@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+      - master  # Replace with your default branch if needed
+
+# Use the 'ubuntu-latest' image for the agent
+pool:
+  vmImage: 'ubuntu-latest'
+
+# Steps to clone the repository, build, test, and deploy
+steps:
+  # Step 1: Checkout the code from GitHub
+  - checkout: self
+    persistCredentials: true  # Ensures credentials are persisted to clone private repos
+
+  # Step 2: Build the Java project using Maven
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'  # Assuming your pom.xml is in the root of the repository
+      mavenOptions: '-Xmx3072m'  # Memory allocation for Maven
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.11'  # Java 11 (change if you're using a different version)
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: true  # Publish JUnit test results
+      testResultsFiles: '**/target/surefire-reports/*.xml'
+      goals: 'clean package'
